@@ -3,13 +3,13 @@ import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } fro
 export const theme: ThemeUserConfig = {
   // [基础配置]
   /** 网站标题。将用于元数据和浏览器标签标题。 */
-  title: '山话海语',
+  title: '刘辰旭 · 研究与写作',
   /** 将用于首页和版权声明 */
   author: '刘辰旭',
   /** 网站的描述元数据。可用于页面元数据。 */
-  description: 'Stay hungry, stay foolish',
+  description: '刘辰旭的学术主页：三维场景理解研究、诗歌与技术写作。',
   /** 网站的默认图标，应该是 `public/` 目录下的图片路径。 */
-  favicon: '/favicon/favicon.ico',
+  favicon: '/favicon/site.svg',
   /** 网站的默认社交卡片图片，应该是 `public/` 目录下的图片路径。 */
   socialCard: '/images/social-card.png',
   /** 指定本站的默认语言。 */
@@ -48,7 +48,9 @@ export const theme: ThemeUserConfig = {
   /** 配置网站的头部。 */
   header: {
     menu: [
-      { title: '博客', link: '/blog' },
+      { title: '研究成果', link: '/#research' },
+      { title: '诗歌', link: '/poetry' },
+      { title: '技术博客', link: '/blog' },
       { title: '关于', link: '/about' }
     ]
   },
@@ -62,7 +64,7 @@ export const theme: ThemeUserConfig = {
     /** 启用在网站页脚显示 “Astro & Pure theme powered” 链接。 */
     credits: true,
     /** 本站社交媒体账户的可选详细信息。 */
-    social: { github: 'https://github.com/cworld1/astro-theme-pure' }
+    social: { github: 'https://github.com/ChaseXLiu' }
   },
 
   // [内容]

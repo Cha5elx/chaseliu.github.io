@@ -1,205 +1,147 @@
 ---
 import { Image } from 'astro:assets'
-
-import { Quote } from 'astro-pure/advanced'
-import { PostPreview } from 'astro-pure/components/pages'
-import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
-import { Button, Card, Icon, Label } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
-import ProjectCard from '@/components/home/ProjectCard.astro'
-import Section from '@/components/home/Section.astro'
-import SkillLayout from '@/components/home/SkillLayout.astro'
-import config from '@/site-config'
+import avatar from '@/assets/avatar.png'
+import geoanchorFramework from '@/assets/research/geoanchor3d-framework.png'
+import quasarFramework from '@/assets/research/quasar3d-framework.png'
 
-const languages = ['Python', 'C/C++', 'Java']
-// const frontend = ['TypeScript', 'Vite', 'Webpack', 'Astro']
-// const backend = ['Vercel', 'Waline']
-
-const MAX_POSTS = 10
-const allPosts = await getBlogCollection()
-const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
-
-const imagePath = config.logo.src
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/*.{jpeg,jpg,png,gif,avif,webp}'
-)
-if (!images[imagePath])
-  throw new Error(
-    `"${imagePath}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif,avif,webp}"`
-  )
+const publications = [
+  {
+    number: '01',
+    title: 'GeoAnchor3D: Hierarchical Spatial Regulation for Task-Adaptive Multimodal Scene Understanding',
+    venue: 'IEEE Transactions on Multimedia (TMM)',
+    status: '小修稿已提交',
+    ccf: 'CCF A 类',
+    cas: '中科院 1 区 · Top',
+    jcr: 'JCR Q1',
+    framework: geoanchorFramework,
+    figureAlt: 'GeoAnchor3D 框架图：多视角与三维物体编码、指令感知几何门控注意力及几何辅助任务头'
+  },
+  {
+    number: '02',
+    title: 'QUASAR-3D: Query-Adaptive Scene Graph Alignment and Reasoning for 3D Vision-Language Understanding',
+    venue: 'IEEE Transactions on Circuits and Systems for Video Technology (TCSVT)',
+    status: '初次投稿，审稿中',
+    ccf: 'CCF B 类',
+    cas: '中科院 1 区 · Top',
+    jcr: 'JCR Q1',
+    framework: quasarFramework,
+    figureAlt: 'QUASAR-3D 框架图：查询自适应子图选择、混合证据编码与三维视觉语言任务'
+  }
+]
 ---
 
-<PageLayout meta={{ title: 'Home' }} highlightColor='#659EB9'>
-  <main class='flex w-full flex-col items-center'>
-    <section class='animate mb-10 flex flex-col items-center gap-y-7' id='content-header'>
-      <Image
-        src={images[imagePath]()}
-        alt={config.logo.alt || 'Profile'}
-        class='h-28 w-auto rounded-full border p-1'
-        loading='eager'
-        fetchpriority='high'
-      />
-
-      <div class='flex flex-col items-center gap-y-4'>
-        <h1 class='text-3xl font-medium'>{config.author}</h1>
-        <div class='flex flex-wrap justify-center gap-x-7 gap-y-3'>
-          <Label title='中国-山东'>
-            <Icon name='location' class='size-5' slot='icon' />
-          </Label>
-          <Label
-            title='Github'
-            as='a'
-            href='https://github.com/ChaseXLiu'
-            target='_blank'
-          >
-            <Icon name='github' class='size-5' slot='icon' />
-          </Label>
+<PageLayout meta={{ title: '首页', description: '刘辰旭的学术主页，展示三维场景理解相关研究与个人写作。' }}>
+  <main class='academic-page'>
+    <section class='hero' aria-labelledby='intro-title'>
+      <div>
+        <p class='eyebrow'>Academic profile · 刘辰旭</p>
+        <h1 class='page-title' id='intro-title'>探索三维场景理解，<br /><span>记录研究与思考。</span></h1>
+        <p class='page-intro'>计算机硕士研究生，目前关注三维场景理解与视觉语言学习。这里汇集我的研究工作，也收录诗歌与未来的技术写作。</p>
+        <div class='hero-actions'>
+          <a class='primary-action' href='#research'>查看研究成果 <span aria-hidden='true'>↗</span></a>
+          <a class='secondary-action' href='/about'>了解更多关于我 <span aria-hidden='true'>→</span></a>
         </div>
       </div>
-
-      <!-- {/* Get template */}
-      <a
-        href='https://github.com/cworld1/astro-theme-pure'
-        target='_blank'
-        class='flex flex-row items-center gap-x-3 rounded-full border bg-background px-4 py-2 text-sm shadow-sm transition-shadow hover:shadow-md'
-      >
-        <span class='relative flex items-center justify-center'>
-          <span
-            class='absolute size-2 animate-ping rounded-full border border-green-400 bg-green-400 opacity-75'
-          ></span>
-          <span class='size-2 rounded-full bg-green-400'></span>
-        </span>
-        <p class='font-medium text-muted-foreground'>获取主题</p>
-      </a> -->
+      <Image src={avatar} alt='刘辰旭的头像' class='hero-avatar' width={220} height={220} loading='eager' />
     </section>
 
-    <div id='content' class='animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
-      <Section title='关于我'>
-        <p class='text-muted-foreground'>个人开发者 / 游戏玩家</p>
-        <p class='text-muted-foreground'>
-          一名默默无闻的Coding爱好者。
-        </p>
-        <Button title='更多信息' class='w-fit self-end' href='/about' variant='ahead' />
-      </Section>
-      {
-        allPostsByDate.length > 0 && (
-          <Section title='帖子'>
-            <ul class='flex flex-col gap-y-1.5 sm:gap-y-2'>
-              {allPostsByDate.map((p) => (
-                <li class='flex flex-col gap-x-2 sm:flex-row'>
-                  <PostPreview post={p} />
-                </li>
-              ))}
-            </ul>
-            <Button title='更多文章' class='w-fit self-end' href='/blog' variant='ahead' />
-          </Section>
-        )
-      }
-
-      {
-        /* <Section title='Experience'>
-      <Card
-        heading='Lorem Ipsum'
-        subheading='Sit amet consectetur'
-        date='Dec 2022 - Nov 2023'
-        imagePath='/src/assets/about-astro.png'
-        altText='Lorem, ipsum dolor sit'
-        imageClass='h-12 w-auto md:-start-16'
-      >
-        <ul class='ms-4 list-disc text-muted-foreground'>
-          <li>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore debitis recusandae, ut
-            molestiae laboriosam pariatur!
-
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, pariatur!</li>
-          </li>
-        </ul>
-      </Card>
-      <Card
-        heading='Lorem Ipsum'
-        subheading='Sit amet consectetur'
-        date='Dec 2022 - Nov 2023'
-        imagePath='/src/assets/about-astro.png'
-        altText='Lorem, ipsum dolor sit'
-        imageClass='h-12 w-auto md:-start-16'
-      />
-    </Section> */
-      }
-      <!-- <Section title='教育经历'>
-        <Card
-          as='a'
-          heading='Lorem ipsum'
-          subheading='Lorem ipsum dolor sit amet, vidit suscipit at mei.'
-          date='August 2021 - July 2025'
-          href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        >
-          {
-            /* <ul class='ms-4 list-disc text-muted-foreground'>
-          <li>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore debitis recusandae, ut
-            molestiae laboriosam pariatur!
-          </li>
-          <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, pariatur!</li>
-        </ul> */
-          }
-        </Card>
-      </Section> -->
-
-      <Section title='项目展示'>
-        <div class='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-          <ProjectCard
-            href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-            heading='项目名称 1'
-            subheading='这里是项目描述，不要温和地走进那个良夜'
-            imagePath='/src/assets/projects/1.jpg'
-          />
-          <ProjectCard
-            href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-            heading='项目名称 2'
-            subheading='暮年也应在日暮时燃烧咆哮'
-            imagePath='/src/assets/projects/2.jpg'
-          />
-          <ProjectCard
-            href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-            heading='项目名称 3'
-            subheading='怒斥，怒斥光明的消逝'
-            imagePath='/src/assets/projects/3.jpg'
-          />
-          <ProjectCard
-            href='/projects'
-            heading='更多项目'
-            subheading='查看更多精彩项目'
-            imagePath='/src/assets/projects/4.jpg'
-          />
+    <section class='research section-rule' id='research' aria-labelledby='research-title'>
+      <div class='section-heading'>
+        <div>
+          <p class='section-kicker'>01 / RESEARCH</p>
+          <h2 id='research-title'>研究成果</h2>
         </div>
-      </Section>
+        <p>以下工作均处于投稿或审稿阶段。</p>
+      </div>
+      <div class='publication-list'>
+        {publications.map((paper) => (
+          <article class='publication'>
+            <span class='paper-number'>{paper.number}</span>
+            <div>
+              <p class='paper-status'>{paper.status}</p>
+              <h3>{paper.title}</h3>
+              <p class='paper-venue'>投稿期刊：{paper.venue}</p>
+              <div class='paper-rankings' aria-label='投稿期刊分级'>
+                <span>{paper.ccf}</span><span>{paper.cas}</span><span>{paper.jcr}</span>
+              </div>
+              <figure class='paper-figure'>
+                <a href={paper.framework.src} target='_blank' rel='noopener noreferrer' aria-label={`打开 ${paper.title} 框架图原图`}>
+                  <Image src={paper.framework} alt={paper.figureAlt} loading='lazy' />
+                </a>
+                <figcaption>图 {paper.number} · {paper.title.split(':')[0]} 框架图（点击查看原图）</figcaption>
+              </figure>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class='ranking-note'>分级属于投稿期刊，不代表论文已录用。CCF 按<a href='https://www.ccf.org.cn/Academic_Evaluation/By_category/' target='_blank' rel='noopener noreferrer'>2026 年第七版目录</a>；中科院分区按<a href='https://www.fenqubiao.com/' target='_blank' rel='noopener noreferrer'>2025 年升级版大类</a>；JCR 按<a href='https://open.ieee.org/wp-content/uploads/IEEE-Title-List-January-2026.pdf' target='_blank' rel='noopener noreferrer'>IEEE 2026 年期刊清单</a>。期刊分级可能随版本变化。</p>
+    </section>
 
-      <!-- <Section title='证书与奖项'>
-        <Card
-          as='a'
-          heading='证书名称'
-          subheading='这里是对证书或奖项的描述。Lorem ipsum dolor sit amet, vidit suscipit at mei. Quem denique mea id. Usu ei regione indoctum dissentiunt.'
-          date='2024年7月'
-          href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        />
-      </Section> -->
-
-       <Section title='证书与奖项'>
-        <Card
-          as='a'
-          heading='吃鸡证书'
-          subheading='金铲铲之战八人排位赛第一名.'
-          date='2025年12月29日'
-          href=''
-        />
-      </Section>
-
-      <Section title='技能栈'>
-        <SkillLayout title='编程语言' skills={languages} />
-        <!-- <SkillLayout title='前端' skills={frontend} />
-        <SkillLayout title='后端' skills={backend} /> -->
-      </Section>
-    </div>
-    <!-- <Quote class='mt-12' /> -->
+    <section class='writing section-rule' aria-labelledby='writing-title'>
+      <div class='section-heading'>
+        <div>
+          <p class='section-kicker'>02 / WRITING</p>
+          <h2 id='writing-title'>研究之外</h2>
+        </div>
+      </div>
+      <div class='writing-grid'>
+        <a href='/poetry' class='writing-card'>
+          <span>个人创作</span>
+          <h3>诗歌</h3>
+          <p>用短句记录观察、记忆与感受。</p>
+          <strong>前往诗歌栏目 ↗</strong>
+        </a>
+        <a href='/blog' class='writing-card'>
+          <span>技术写作</span>
+          <h3>技术博客</h3>
+          <p>未来在这里整理研究过程中的方法与实践。</p>
+          <strong>前往博客栏目 ↗</strong>
+        </a>
+      </div>
+    </section>
   </main>
 </PageLayout>
+
+<style>
+  .hero { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 3rem; padding: clamp(4rem, 10vw, 8rem) 0 6rem; }
+  .hero h1 span { color: var(--academic-accent); }
+  .hero-avatar { width: clamp(8rem, 18vw, 13.75rem); height: auto; aspect-ratio: 1; border-radius: 50%; object-fit: cover; filter: grayscale(18%); border: 1px solid var(--academic-line); padding: .4rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.8rem; margin-top: 2.5rem; font-size: .9rem; }
+  .primary-action { display: inline-flex; align-items: center; gap: 1.5rem; padding: .8rem 1.15rem; border-radius: .35rem; background: var(--academic-accent); color: hsl(var(--background)); }
+  .primary-action:hover { color: hsl(var(--background)); opacity: .88; }
+  .secondary-action { color: var(--academic-accent); }
+  .research, .writing { padding-top: 2.3rem; }
+  .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 2rem; }
+  .section-heading h2 { margin-top: .5rem; font-size: clamp(1.75rem, 4vw, 2.3rem); font-weight: 550; letter-spacing: -.03em; }
+  .section-heading > p { color: hsl(var(--muted-foreground)); font-size: .82rem; }
+  .publication { display: grid; grid-template-columns: 3.4rem 1fr; gap: 1.5rem; padding: 2rem 0; border-top: 1px solid var(--academic-line); }
+  .paper-number { color: var(--academic-accent); font-size: .78rem; font-variant-numeric: tabular-nums; }
+  .paper-status { color: var(--academic-accent); font-size: .82rem; font-weight: 650; }
+  .publication h3 { max-width: 48rem; margin: .55rem 0 .75rem; font-size: clamp(1.1rem, 2.4vw, 1.42rem); font-weight: 570; line-height: 1.5; overflow-wrap: anywhere; }
+  .paper-venue { color: hsl(var(--muted-foreground)); font-size: .88rem; line-height: 1.6; }
+  .paper-rankings { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+  .paper-rankings span { padding: .25rem .65rem; border: 1px solid var(--academic-line); border-radius: 10rem; color: hsl(var(--muted-foreground)); font-size: .72rem; }
+  .paper-figure { max-width: 32rem; margin: 1.8rem 0 0; }
+  .paper-figure a { display: block; padding: .5rem; border: 1px solid var(--academic-line); border-radius: .4rem; background: white; }
+  .paper-figure img { display: block; width: 100%; height: auto; }
+  .paper-figure figcaption { margin-top: .6rem; color: hsl(var(--muted-foreground)); font-size: .75rem; text-align: center; }
+  .ranking-note { max-width: 50rem; margin: 1rem 0 4rem 4.9rem; color: hsl(var(--muted-foreground)); font-size: .74rem; line-height: 1.8; }
+  .ranking-note a { text-decoration: underline; text-underline-offset: .2em; }
+  .writing { padding-bottom: 3rem; }
+  .writing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .writing-card { display: flex; flex-direction: column; align-items: start; min-height: 13rem; padding: 1.5rem; border: 1px solid var(--academic-line); border-radius: .5rem; background: var(--academic-surface); transition: border-color .2s, transform .2s; }
+  .writing-card:hover { border-color: var(--academic-accent); transform: translateY(-2px); }
+  .writing-card span { color: var(--academic-accent); font-size: .76rem; }
+  .writing-card h3 { margin: .8rem 0 .4rem; color: hsl(var(--foreground)); font-size: 1.4rem; }
+  .writing-card p { color: hsl(var(--muted-foreground)); font-size: .88rem; }
+  .writing-card strong { margin-top: auto; padding-top: 1rem; color: var(--academic-accent); font-size: .8rem; font-weight: 550; }
+  @media (max-width: 640px) {
+    .hero { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 0; }
+    .hero-avatar { grid-row: 1; width: 7rem; }
+    .section-heading { align-items: start; flex-direction: column; gap: .5rem; }
+    .publication { grid-template-columns: 1.5rem 1fr; gap: .6rem; }
+    .ranking-note { margin-left: 0; }
+    .writing-grid { grid-template-columns: 1fr; }
+  }
+</style>

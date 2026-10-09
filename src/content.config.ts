@@ -56,4 +56,17 @@ const docs = defineCollection({
     })
 })
 
-export const collections = { blog, docs }
+const poetry = defineCollection({
+  loader: glob({ base: './src/content/poetry', pattern: '**/*.md' }),
+  schema: z.object({
+    title: z.string(),
+    writtenDate: z.string(),
+    order: z.number(),
+    publishDate: z.coerce.date().optional(),
+    updatedDate: z.coerce.date().optional(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false)
+  })
+})
+
+export const collections = { blog, docs, poetry }

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f5f6f2"/>
+  <path d="M72 82h1056M72 548h1056" stroke="#cad6d4" stroke-width="2"/>
+  <circle cx="1078" cy="148" r="68" fill="none" stroke="#dce6e3" stroke-width="2"/>
+  <circle cx="1078" cy="148" r="44" fill="none" stroke="#dce6e3" stroke-width="2"/>
+  <text x="78" y="174" fill="#426778" font-family="Segoe UI, Arial, sans-serif" font-size="29" letter-spacing="7">ACADEMIC PROFILE</text>
+  <text x="72" y="337" fill="#1e3038" font-family="Segoe UI, Arial, sans-serif" font-size="102" font-weight="600" letter-spacing="-4">LIU CHENXU</text>
+  <text x="78" y="408" fill="#557179" font-family="Segoe UI, Arial, sans-serif" font-size="34">3D Scene Understanding · Research &amp; Writing</text>
+  <text x="78" y="592" fill="#6a7d7c" font-family="Segoe UI, Arial, sans-serif" font-size="25">chaseliu.top</text>
+</svg>

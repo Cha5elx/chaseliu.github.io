@@ -1,75 +1,32 @@
 ---
-import type { MarkdownHeading } from 'astro'
 import type { CollectionEntry } from 'astro:content'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { integ } from '@/site-config'
 
-// Plugin styles
-import 'katex/dist/katex.min.css'
-
-import config from 'virtual:config'
-
-import { MediumZoom } from 'astro-pure/advanced'
-import { ArticleBottom, Copyright, Hero, TOC } from 'astro-pure/components/pages'
-import PageLayout from '@/layouts/ContentLayout.astro'
-import { Comment, PageInfo } from '@/components/waline'
-
-interface Props {
-  post: CollectionEntry<'blog'>
-  posts: CollectionEntry<'blog'>[]
-  headings: MarkdownHeading[]
-  remarkPluginFrontmatter: Record<string, unknown>
-}
-
-const {
-  post: { id, data },
-  posts,
-  headings,
-  remarkPluginFrontmatter
-} = Astro.props
-
-const {
-  description,
-  heroImage,
-  publishDate,
-  title,
-  updatedDate,
-  draft: isDraft,
-  comment: enableComment
-} = data
-
-const socialImage = heroImage
-  ? typeof heroImage.src === 'string'
-    ? heroImage.src
-    : heroImage.src.src
-  : config.socialCard
-const articleDate = updatedDate?.toISOString() ?? publishDate.toISOString()
-const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-text-opacity))'
+const { post } = Astro.props as { post: CollectionEntry<'blog'> }
+const { title, description, publishDate } = post.data
+const date = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }).format(publishDate)
 ---
 
-<PageLayout
-  meta={{ articleDate, description, ogImage: socialImage, title }}
-  highlightColor={primaryColor}
-  back='/blog'
->
-  {!!headings.length && <TOC {headings} slot='sidebar' />}
-
-  <Hero {data} {remarkPluginFrontmatter} slot='header'>
-    <Fragment slot='description'>
-      {!isDraft && enableComment && <PageInfo comment class='mt-1' />}
-    </Fragment>
-  </Hero>
-
-  <slot />
-
-  <Fragment slot='bottom'>
-    {/* Copyright */}
-    <Copyright {data} />
-    {/* Article recommend */}
-    <ArticleBottom collections={posts} {id} class='mt-3 sm:mt-6' />
-    {/* Comment */}
-    {!isDraft && enableComment && <Comment class='mt-3 sm:mt-6' />}
-  </Fragment>
-
-  <slot name='bottom-sidebar' slot='bottom-sidebar' />
+<PageLayout meta={{ title, description, articleDate: publishDate.toISOString() }}>
+  <main class='academic-page blog-post'>
+    <a class='back-link' href='/blog'>← 返回技术博客</a>
+    <article>
+      <header class='post-header'>
+        <p class='eyebrow'>NOTES / 技术写作</p>
+        <h1>{title}</h1>
+        <p>{date}</p>
+      </header>
+      <div class:list={[integ.typography.class, 'post-body']}><slot /></div>
+    </article>
+  </main>
 </PageLayout>
 
-{config.integ.mediumZoom.enable && <MediumZoom />}
+<style>
+  .blog-post { width: min(100%, 51rem); padding-top: clamp(3rem, 7vw, 5rem); }
+  .back-link { color: var(--academic-accent); font-size: .85rem; }
+  .post-header { margin: 4rem 0 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--academic-line); }
+  .post-header h1 { margin: 1rem 0; font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 560; line-height: 1.3; }
+  .post-header > p:last-child { color: hsl(var(--muted-foreground)); font-size: .82rem; }
+  .post-body { max-width: none; line-height: 1.85; }
+</style>

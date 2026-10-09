@@ -1,0 +1,57 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content'
+import PageLayout from '@/layouts/BaseLayout.astro'
+
+export async function getStaticPaths() {
+  const poems = await getCollection('poetry')
+  return poems.map((poem) => ({ params: { id: poem.id }, props: { poem } }))
+}
+
+const { poem } = Astro.props as { poem: CollectionEntry<'poetry'> }
+const { Content } = await render(poem)
+const poems = (await getCollection('poetry')).sort((a, b) => a.data.order - b.data.order)
+const index = poems.findIndex((entry) => entry.id === poem.id)
+const previous = poems[index - 1]
+const next = poems[index + 1]
+---
+
+<PageLayout meta={{ title: poem.data.title, description: `${poem.data.title}，刘辰旭的现代诗作品。` }}>
+  <main class='academic-page poem-page'>
+    <a class='back-link' href='/poetry'>← 返回诗歌目录</a>
+    <article class='poem-article'>
+      <p class='poem-progress'>第 {String(index + 1).padStart(2, '0')} 首 <span aria-hidden='true'>/</span> 共 {poems.length} 首</p>
+      <h1 class='page-title'>{poem.data.title}</h1>
+      <div class='poem-body section-rule'><Content /></div>
+      <p class='poem-date'>{poem.data.writtenDate}</p>
+    </article>
+    <nav class='poem-navigation' aria-label='诗歌翻页' data-previous={previous && `/poetry/${previous.id}`} data-next={next && `/poetry/${next.id}`}>
+      {previous ? <a href={`/poetry/${previous.id}`}>← 上一首 <span>{previous.data.title}</span></a> : <span />}
+      {next ? <a href={`/poetry/${next.id}`}>下一首 → <span>{next.data.title}</span></a> : <span />}
+    </nav>
+  </main>
+</PageLayout>
+
+<script>
+  document.addEventListener('keydown', (event) => {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.target instanceof HTMLInputElement) return
+    const navigation = document.querySelector<HTMLElement>('.poem-navigation')
+    const destination = event.key === 'ArrowLeft' ? navigation?.dataset.previous : event.key === 'ArrowRight' ? navigation?.dataset.next : null
+    if (destination) window.location.href = destination
+  })
+</script>
+
+<style>
+  .poem-page { width: min(100%, 43rem); padding-top: clamp(3rem, 7vw, 5rem); }
+  .back-link { display: inline-block; margin-bottom: clamp(4rem, 10vw, 6rem); color: hsl(var(--muted-foreground)); font-size: .82rem; }
+  .poem-article { font-family: 'Noto Serif SC', 'Noto Serif CJK SC', 'Songti SC', 'STSong', serif; }
+  .poem-progress { color: hsl(var(--muted-foreground)); font-size: .75rem; letter-spacing: .12em; }
+  .poem-progress span { padding: 0 .5rem; color: var(--academic-line); }
+  .poem-article h1 { margin: 2rem 0 2.5rem; font-size: clamp(2rem, 5vw, 2.7rem); font-weight: 500; letter-spacing: .14em; }
+  .poem-body { padding-top: 2.2rem; font-size: clamp(1rem, 2vw, 1.12rem); letter-spacing: .05em; line-height: 2.12; }
+  .poem-body :global(p) { margin-bottom: 1.35rem; }
+  .poem-date { margin-top: 2rem; padding-top: 1.3rem; border-top: 1px solid var(--academic-line); color: hsl(var(--muted-foreground)); font-family: Georgia, serif; font-size: .76rem; letter-spacing: .1em; }
+  .poem-navigation { display: flex; justify-content: space-between; gap: 1rem; margin-top: 5rem; padding-top: 1.5rem; border-top: 1px solid var(--academic-line); font-size: .82rem; }
+  .poem-navigation a { display: flex; flex-direction: column; gap: .35rem; max-width: 45%; color: var(--academic-accent); }
+  .poem-navigation a:last-child { text-align: right; }
+  .poem-navigation a span { color: hsl(var(--muted-foreground)); }
+</style>

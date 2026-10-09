@@ -1,0 +1,32 @@
+---
+import { PostPreview } from 'astro-pure/components/pages'
+import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+import PageLayout from '@/layouts/BaseLayout.astro'
+
+const posts = sortMDByDate((await getBlogCollection()).filter((post) => !post.data.draft))
+---
+
+<PageLayout meta={{ title: '技术博客', description: '刘辰旭的技术笔记与研究实践。' }}>
+  <main class='academic-page listing-page'>
+    <p class='eyebrow'>NOTES / 技术写作</p>
+    <h1 class='page-title'>技术博客</h1>
+    <p class='page-intro'>未来在这里整理研究过程中的方法、工具与实践。</p>
+    <div class='section-rule listing-content'>
+      {posts.length ? (
+        <ul class='post-list'>{posts.map((post) => <li><PostPreview post={post} detailed /></li>)}</ul>
+      ) : (
+        <div class='empty-state'><span>01 / NOTES</span><h2>文章正在整理中</h2><p>这里暂时没有公开的技术文章。之后写下的内容会从这里开始。</p></div>
+      )}
+    </div>
+  </main>
+</PageLayout>
+
+<style>
+  .listing-page { padding-top: clamp(4rem, 9vw, 7rem); }
+  .listing-content { margin-top: 3rem; padding-top: 2rem; }
+  .post-list { display: grid; gap: 1.4rem; }
+  .empty-state { padding: 3rem 0; }
+  .empty-state span { color: var(--academic-accent); font-size: .75rem; letter-spacing: .1em; }
+  .empty-state h2 { margin: 1rem 0 .5rem; font-size: 1.4rem; font-weight: 550; }
+  .empty-state p { color: hsl(var(--muted-foreground)); line-height: 1.8; }
+</style>

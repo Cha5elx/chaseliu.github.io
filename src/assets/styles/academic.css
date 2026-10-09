@@ -1,0 +1,81 @@
+:root {
+  --academic-accent: #426778;
+  --academic-surface: #f2f5f4;
+  --academic-line: #d9e1e0;
+}
+
+.dark {
+  --academic-accent: #a8c4ca;
+  --academic-surface: #151e22;
+  --academic-line: #344248;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  min-height: 5.5rem;
+  border-bottom: 1px solid var(--academic-line);
+}
+
+.site-brand {
+  color: hsl(var(--foreground));
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+.brand-dot { color: var(--academic-accent); }
+
+.site-nav {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: .35rem 1.5rem;
+  font-size: .9rem;
+}
+
+.site-nav a { color: hsl(var(--muted-foreground)); }
+.site-nav a:hover, .site-nav a[aria-current='page'] { color: hsl(var(--foreground)); }
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--academic-line);
+  border-radius: 50%;
+  color: hsl(var(--muted-foreground));
+}
+
+.theme-toggle svg { width: 1rem; height: 1rem; }
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.5rem;
+  justify-content: space-between;
+  margin-top: 5rem;
+  padding: 1.5rem 0 2rem;
+  border-top: 1px solid var(--academic-line);
+  color: hsl(var(--muted-foreground));
+  font-size: .8rem;
+}
+
+.site-footer a { color: hsl(var(--foreground)); }
+
+.academic-page { width: min(100%, 61rem); margin: 0 auto; }
+.eyebrow { color: var(--academic-accent); font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+.page-title { margin: .8rem 0 1.1rem; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 550; letter-spacing: -.04em; line-height: 1.16; }
+.page-intro { max-width: 47rem; color: hsl(var(--muted-foreground)); font-size: 1.05rem; line-height: 1.9; }
+.section-rule { border-top: 1px solid var(--academic-line); }
+.section-kicker { color: var(--academic-accent); font-size: .78rem; font-weight: 650; letter-spacing: .1em; }
+.academic-link { color: var(--academic-accent); text-decoration: underline; text-underline-offset: .25em; }
+
+@media (max-width: 640px) {
+  .site-header { align-items: flex-start; gap: .75rem; flex-wrap: wrap; padding: 1.1rem 0; }
+  .site-nav { order: 3; width: 100%; justify-content: flex-start; gap: .45rem 1.1rem; }
+  .theme-toggle { margin-left: auto; }
+}

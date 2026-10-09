@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content'
+import PageLayout from '@/layouts/BaseLayout.astro'
+
+const poems = (await getCollection('poetry')).sort((a, b) =>
+  (a.data.order ?? Number.MAX_SAFE_INTEGER) - (b.data.order ?? Number.MAX_SAFE_INTEGER)
+)
+---
+
+<PageLayout meta={{ title: '诗歌', description: '刘辰旭的现代诗作品。' }}>
+  <main class='academic-page poetry-page'>
+    <p class='eyebrow'>POETRY / 个人作品</p>
+    <h1 class='page-title'>诗歌</h1>
+    <p class='page-intro'>收录 2017—2023 年写下的 {poems.length} 首现代诗。沿着时间顺序，读一些研究之外的句子。</p>
+    <div class='section-rule poetry-content'>
+      {poems.length ? (
+        <ol class='poem-list'>
+          {poems.map((poem, index) => <li><span>{String(index + 1).padStart(2, '0')}</span><a href={`/poetry/${poem.id}`}>{poem.data.title}<small>{poem.data.writtenDate}</small></a></li>)}
+        </ol>
+      ) : (
+        <div class='empty-state'><span>01 / POETRY</span><h2>诗歌正在整理中</h2><p>这里会陆续收录过去写下的作品。</p></div>
+      )}
+    </div>
+  </main>
+</PageLayout>
+
+<style>
+  .poetry-page { padding-top: clamp(4rem, 9vw, 7rem); }
+  .poetry-content { margin-top: 3rem; padding-top: 1rem; }
+  .poem-list li { display: grid; grid-template-columns: 3rem 1fr; gap: 1rem; align-items: baseline; padding: 1.15rem 0; border-bottom: 1px solid var(--academic-line); }
+  .poem-list li > span { color: var(--academic-accent); font-size: .76rem; }
+  .poem-list a { display: flex; justify-content: space-between; gap: 1rem; font-family: 'Noto Serif SC', 'Songti SC', 'STSong', serif; font-size: 1.12rem; letter-spacing: .08em; }
+  .poem-list a small { color: hsl(var(--muted-foreground)); font-family: Georgia, serif; font-size: .76rem; letter-spacing: .03em; }
+  @media (max-width: 640px) { .poem-list a { flex-direction: column; gap: .2rem; } }
+  .empty-state { padding: 3rem 0; }
+  .empty-state span { color: var(--academic-accent); font-size: .75rem; letter-spacing: .1em; }
+  .empty-state h2 { margin: 1rem 0 .5rem; font-size: 1.4rem; font-weight: 550; }
+  .empty-state p { color: hsl(var(--muted-foreground)); line-height: 1.8; }
+</style>
